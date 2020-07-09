@@ -6,8 +6,8 @@
  */
 class Validation
 {
-    private  $params = [];
-    private  $error = [];
+    private $params = [];
+    private $error = [];
 
     /**
      * Validation constructor.
@@ -112,13 +112,13 @@ class Validation
         $country = ['380', '7', '1', '61', '213', '1246', '375'];
         /** @var  $number */
         $number = [];
-        /** @var  $item  - разбиваем на массив, и чистим от лишних лимволов */
+        /** @var  $item - разбиваем на массив, и чистим от лишних лимволов */
         foreach (str_split($phone) as $item) {
             if (!in_array($item, ['(', ')', ' ', '-', '+'])) {
                 $number[] = $item;
             }
         }
-        /** @var  $value - проверка валидности номера*/
+        /** @var  $value - проверка валидности номера */
         foreach ($country as $value) {
             /** @var  $length - узнаем длину кода номера , который ножно проверить */
             $length = (int)count(str_split($value));
