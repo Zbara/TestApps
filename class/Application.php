@@ -2,7 +2,7 @@
 
 class Application extends Config {
 
-    private $routingRules = [
+    private array $routingRules = [
         'Application' => [
             'index' => 'Application/actionIndex'
         ],
@@ -33,7 +33,8 @@ class Application extends Config {
     public function run() {
         if (array_key_exists($this->routing->controller, $this->routingRules)) {
             if (array_key_exists($this->routing->action, $this->routingRules[$this->routing->controller])) {
-                list($controller, $action) = explode(DIRECTORY_SEPARATOR, $this->routingRules[$this->routing->controller][$this->routing->action]);
+                //Изменил DIRECTORY_SEPARATOR на / ошибка выполения
+                list($controller, $action) = explode('/', $this->routingRules[$this->routing->controller][$this->routing->action]);
                 call_user_func([$controller, $action]);
             } else { http_response_code(404); die('action not found'); }
         } else { http_response_code(404); die('controller not found'); }
@@ -68,6 +69,15 @@ class Application extends Config {
      * в случае отсутствия ошибок, возвращать следует пустой массив
      */
     public function actionFormSubmit($data) {
+
+
+
+
+
+
+
+        print_r($data);
+
 
         $errors = [];
 
