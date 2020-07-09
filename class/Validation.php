@@ -67,7 +67,7 @@ class Validation
         /** @var  $name - проверка на спец символы */
         $filter = $this->filter($name);
 
-        if($filter) {
+        if ($filter) {
             $this->error['name'] = 'В строке есть запрещеные символы, такие ' . $filter;
         } elseif (strlen($name) < 3) {
             $this->error['name'] = 'Имя не может быть меньше 3 символов';
@@ -94,8 +94,8 @@ class Validation
         $text = str_split($text);
 
         /** @var  $item */
-        foreach ($text as $item){
-            if(in_array($item, $strip)){
+        foreach ($text as $item) {
+            if (in_array($item, $strip)) {
                 $error[] = $item;
             }
         }
@@ -108,21 +108,22 @@ class Validation
      */
     private function checkPhone($phone)
     {
-        /** @var  $сodePhone */
+        /** @var  $сodePhone - массив кодов стран */
         $country = ['380', '7', '1', '61', '213', '1246', '375'];
         /** @var  $number */
         $number = [];
-        /** @var  $item */
-        foreach (str_split($phone) as $item){
-            if(!in_array($item, ['(', ')', ' ', '-', '+'])){
+        /** @var  $item  - разбиваем на массив, и чистим от лишних лимволов */
+        foreach (str_split($phone) as $item) {
+            if (!in_array($item, ['(', ')', ' ', '-', '+'])) {
                 $number[] = $item;
             }
         }
-        foreach ($country as $value){
+        /** @var  $value - проверка валидности номера*/
+        foreach ($country as $value) {
             /** @var  $length */
-            $length = (int) count(str_split($value));
+            $length = (int)count(str_split($value));
 
-            if(join('', array_slice($number, 0, $length)) == $value) {
+            if (join('', array_slice($number, 0, $length)) == $value) {
                 if (count($number) >= 10 or count($number) <= 14) {
                     return true;
                 }
@@ -148,7 +149,7 @@ class Validation
      */
     private function checkComment($text)
     {
-        /** @var  $text - очистика от мусора*/
+        /** @var  $text - очистика от мусора */
         $text = strip_tags($text);
 
         if (strlen($text) <= 5 or strlen($text) >= 4094) {
