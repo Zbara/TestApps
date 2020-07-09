@@ -151,7 +151,7 @@ class Validation
      */
     private function checkComment($text)
     {
-        /** @var  $text - очистика от мусора */
+        /** @var  $text - очистка от мусора */
         $text = strip_tags($text);
 
         if (strlen($text) <= 5 or strlen($text) >= 4094) {
