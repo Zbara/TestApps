@@ -21,6 +21,9 @@ class Validation
      * @return array
      */
     public function checkData(){
+         /** плюс можно чистить данные от SQL инъекций,
+         * но бд не используем функции не досутпные
+         **/
 
         /** @var  $param */
         foreach ($this->params as $param){
@@ -32,8 +35,15 @@ class Validation
 
                  /** проверка номера */
                 case "phone":
-
+                    $this->checkPhone($param['value']);
                     break;
+
+                /** проверка email */
+                case "email":
+                    $this->checkEmail($param['value']);
+                    break;
+
+
             }
         }
         return ['result' => count($this->error) === 0, 'error' => $this->error];
@@ -44,9 +54,13 @@ class Validation
      * проверка валидности имени
      */
     private function checkName($name) {
-        if(!preg_match('/^[a-zA-Zа-яёА-ЯЁ\s\-]+$/', $name)){
-            $this->error['name'] = 'Ошибка имени';
-        }
+
+        if(isset($name)){
+            if(strlen($name) >= 2){
+                if(!preg_match("/^[\s\x{600}-\x{6FF}a-zA-Zа-яА-Я]+$/iu", $name))
+                    $this->error['name'] = 'Не верный формат';
+            } else $this->error['name'] = 'Короткое имя';
+        } else $this->error['name'] = 'Введите имя';
     }
 
     /**
@@ -54,6 +68,20 @@ class Validation
      * проверка номера
      */
     private function checkPhone($phone){
-
+        if(!preg_match('/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/', $phone)){
+            $this->error['phone'] = 'Ошибка телефона';
+        }
     }
+
+    /**
+     * @param $email
+     * проверка имейла
+     */
+    private function checkEmail($email){
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            $this->error['email'] = 'Не верный email.';
+        }
+    }
+
+
 }
