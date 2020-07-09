@@ -16,39 +16,45 @@ class Validation
     {
         $this->params = $data;
     }
-
     /**
      * @return array
      */
     public function checkData()
     {
-        /** @var  $param */
-        foreach ($this->params as $param) {
-            switch ($param['name']) {
-                /** проверка имени */
-                case "name":
-                    $this->checkName($param['value']);
-                    break;
+        /** @var  $params - поля которые обязательные */
+        $postParams = ['name', 'phone', 'email', 'comment'];
+        /** @var  $paramsClient - делаем ассоциативный массив  чтоб обращаться было проще*/
+        $paramsClient = array_column($this->params, 'value', 'name');
 
-                /** проверка номера */
-                case "phone":
-                    $this->checkPhone($param['value']);
-                    break;
+        /** @var  $item */
+        foreach ($postParams as $item) {
+            /** проверям на поля, есть ли они, если поля нет будет ошибка */
+            if (isset($paramsClient[$item])) {
+                switch ($item) {
+                    /** проверка имени */
+                    case "name":
+                        $this->checkName($paramsClient[$item]);
+                        break;
 
-                /** проверка email */
-                case "email":
-                    $this->checkEmail($param['value']);
-                    break;
+                    /** проверка номера */
+                    case "phone":
+                        $this->checkPhone($paramsClient[$item]);
+                        break;
 
-                /** проверка коментария */
-                case "comment":
-                    $this->checkComment($param['value']);
-                    break;
-            }
+                    /** проверка email */
+                    case "email":
+                        $this->checkEmail($paramsClient[$item]);
+                        break;
+
+                    /** проверка коментария */
+                    case "comment":
+                        $this->checkComment($paramsClient[$item]);
+                        break;
+                }
+            } else $this->error[$item] = "Параметр - {$item} пуст.";
         }
         return ['result' => count($this->error) === 0, 'error' => $this->error];
     }
-
     /**
      * @param $name
      * проверка валидности имени
@@ -84,7 +90,6 @@ class Validation
             $this->error['email'] = 'Не верный email.';
         }
     }
-
     /**
      * @param $text
      * проверка комментария
