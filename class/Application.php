@@ -70,17 +70,25 @@ class Application extends Config {
      */
     public function actionFormSubmit($data) {
 
-
-
-
-
-
-
-        print_r($data);
-
-
+        /** @var  $errors - массив ошибок*/
         $errors = [];
 
+        foreach ($data as $key => $item){
+            switch ($item['name']){
+                /** проверка имени */
+                case "name":
+                    if(!preg_match('/^[a-zA-Zа-яёА-ЯЁ\s\-]+$/', $item['value'])){
+                        $errors['name'] = 'Ошибка имени';
+                    }
+                  break;
+
+                /** проверка номера */
+                case "phone":
+
+                    break;
+
+            }
+        }
         return ['result' => count($errors) === 0, 'error' => $errors];
     }
 
