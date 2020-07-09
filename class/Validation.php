@@ -6,8 +6,8 @@
  */
 class Validation
 {
-    private array $params = [];
-    private array $error = [];
+    private  $params = [];
+    private  $error = [];
 
     /**
      * Validation constructor.
@@ -84,7 +84,7 @@ class Validation
         /** @var  $error */
         $error = [];
 
-        /** @var  $strip */
+        /** @var  $strip - то что надо удалять */
         $strip = ["1", "2", "3", "4", "5", "6", "7", "8", "9",
             "0", "'", ",", "/", ";", ":", "@", "[", "]", "{",
             "}", "=", ")", "(", "*", "&", "^", "%", "$", "<",
