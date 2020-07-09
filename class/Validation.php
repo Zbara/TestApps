@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class Validation
  * Create 09.07.2020 13:50
@@ -23,9 +22,6 @@ class Validation
      */
     public function checkData()
     {
-        /** плюс можно чистить данные от SQL инъекций,
-         * но бд не используем функции не досутпные
-         **/
         /** @var  $param */
         foreach ($this->params as $param) {
             switch ($param['name']) {

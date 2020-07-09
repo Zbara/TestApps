@@ -74,6 +74,7 @@ class Application extends Config {
          */
         $validation = new Validation($data);
 
+        /** визываем метод, для проверки */
         return $validation->checkData();
     }
     /**
