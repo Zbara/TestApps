@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class Validation
  * Create 09.07.2020 13:50
@@ -16,6 +17,7 @@ class Validation
     {
         $this->params = $data;
     }
+
     /**
      * @return array
      */
@@ -23,7 +25,7 @@ class Validation
     {
         /** @var  $params - поля которые обязательные */
         $postParams = ['name', 'phone', 'email', 'comment'];
-        /** @var  $paramsClient - делаем ассоциативный массив  чтоб обращаться было проще*/
+        /** @var  $paramsClient - делаем ассоциативный массив  чтоб обращаться было проще */
         $paramsClient = array_column($this->params, 'value', 'name');
 
         /** @var  $item */
@@ -55,29 +57,78 @@ class Validation
         }
         return ['result' => count($this->error) === 0, 'error' => $this->error];
     }
+
     /**
      * @param $name
      * проверка валидности имени
      */
     private function checkName($name)
     {
-        if (isset($name)) {
-            if (strlen($name) >= 2) {
-                if (!preg_match("/^[\s\x{600}-\x{6FF}a-zA-Zа-яА-Я]+$/iu", $name))
-                    $this->error['name'] = 'Не верный формат';
-            } else $this->error['name'] = 'Короткое имя';
-        } else $this->error['name'] = 'Введите имя';
+        /** @var  $name - проверка на спец символы */
+        $filter = $this->filter($name);
+
+        if($filter) {
+            $this->error['name'] = 'В строке есть запрещеные символы, такие ' . $filter;
+        } elseif (strlen($name) < 3) {
+            $this->error['name'] = 'Имя не может быть меньше 3 символов';
+        } elseif (strlen($name) > 32) $this->error['name'] = 'Имя не может быть больше 32 символов';
+    }
+
+    /**
+     * @param $text
+     * @return string
+     * проверка на запрещеные символы
+     */
+    private function filter($text)
+    {
+        /** @var  $error */
+        $error = [];
+
+        /** @var  $strip */
+        $strip = ["1", "2", "3", "4", "5", "6", "7", "8", "9",
+            "0", "'", ",", "/", ";", ":", "@", "[", "]", "{",
+            "}", "=", ")", "(", "*", "&", "^", "%", "$", "<",
+            ">", "?", "!", '"'
+        ];
+        /** @var  $text */
+        $text = str_split($text);
+
+        /** @var  $item */
+        foreach ($text as $item){
+            if(in_array($item, $strip)){
+                $error[] = $item;
+            }
+        }
+        return implode('', $error);
     }
 
     /**
      * @param $phone
-     * проверка номера
+     * @return bool
      */
     private function checkPhone($phone)
     {
-        if (!preg_match('/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/', $phone)) {
-            $this->error['phone'] = 'Ошибка телефона';
+        /** @var  $сodePhone */
+        $country = ['380', '7', '1', '61', '213', '1246', '375'];
+        /** @var  $number */
+        $number = [];
+        /** @var  $item */
+        foreach (str_split($phone) as $item){
+            if(!in_array($item, ['(', ')', ' ', '-', '+'])){
+                $number[] = $item;
+            }
         }
+        foreach ($country as $value){
+            /** @var  $length */
+            $length = (int) count(str_split($value));
+
+            if(join('', array_slice($number, 0, $length)) == $value) {
+                if (count($number) >= 10 or count($number) <= 14) {
+                    return true;
+                }
+            }
+        }
+        $this->error['phone'] = 'Ошибка телефона';
     }
 
     /**
@@ -90,12 +141,16 @@ class Validation
             $this->error['email'] = 'Не верный email.';
         }
     }
+
     /**
      * @param $text
      * проверка комментария
      */
     private function checkComment($text)
     {
+        /** @var  $text - очистика от мусора*/
+        $text = strip_tags($text);
+
         if (strlen($text) <= 5 or strlen($text) >= 4094) {
             $this->error['comment'] = 'Очень маленький комментарий!';
         }
