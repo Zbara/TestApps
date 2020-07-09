@@ -29,7 +29,6 @@ class Application extends Config {
             //Normal GET request. Nothing to do yet
         }
     }
-
     public function run() {
         if (array_key_exists($this->routing->controller, $this->routingRules)) {
             if (array_key_exists($this->routing->action, $this->routingRules[$this->routing->controller])) {
