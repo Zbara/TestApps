@@ -120,10 +120,12 @@ class Validation
         }
         /** @var  $value - проверка валидности номера*/
         foreach ($country as $value) {
-            /** @var  $length */
+            /** @var  $length - узнаем длину кода номера , который ножно проверить */
             $length = (int)count(str_split($value));
 
+            /** сравниваем коды номеров */
             if (join('', array_slice($number, 0, $length)) == $value) {
+                /** если длина верная тогда выпускаем без ошибки */
                 if (count($number) >= 10 or count($number) <= 14) {
                     return true;
                 }
