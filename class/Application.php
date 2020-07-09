@@ -70,29 +70,13 @@ class Application extends Config {
      */
     public function actionFormSubmit($data) {
 
-        /** @var  $errors - массив ошибок*/
-        $errors = [];
+        /** @var  $validation
+         *  Создал отдельный класс, для удобной работы с ним
+         */
+        $validation = new Validation($data);
 
-        foreach ($data as $key => $item){
-            switch ($item['name']){
-                /** проверка имени */
-                case "name":
-                    if(!preg_match('/^[a-zA-Zа-яёА-ЯЁ\s\-]+$/', $item['value'])){
-                        $errors['name'] = 'Ошибка имени';
-                    }
-                  break;
-
-                /** проверка номера */
-                case "phone":
-
-                    break;
-
-            }
-        }
-        return ['result' => count($errors) === 0, 'error' => $errors];
+        return $validation->checkData();
     }
-
-
     /**
      * Функция обработки AJAX запросов
      * @param $post
